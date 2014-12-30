@@ -2,8 +2,8 @@ package com.example.dell.checkwifisignal;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.wifi.WifiInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
@@ -18,14 +18,26 @@ import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
-//    public int numberOfLevel = 5;
-//    WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-//    public int currentSignal = wifiManager.getConnectionInfo().getRssi();
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //ShakeDetector initial
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                Toast.makeText(getApplicationContext(), "You are shaking", Toast.LENGTH_LONG).show();
+            }
+        });
+
 //        int numberOfLevel = 5;
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
